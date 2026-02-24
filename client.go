@@ -12,7 +12,7 @@ type reqxClient struct {
 	// more settings
 }
 
-func (r *reqxClient) Do(req *http.Request)
+func (r *reqxClient) DoBody(req *http.Request)
 
 
 func main() {

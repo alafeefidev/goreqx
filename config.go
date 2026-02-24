@@ -7,9 +7,10 @@ import (
 
 type ReqCache struct {
 	// Check he url as a url not string
+	Id uuid.UUID `json:"id"`
+	Code int `json:"code"` // Status code, 200...
 	Url string `json:"url"`
-	Id uuid.UUID
-
+	FileType string `json:"file_type"` // JSON and HTML
 }
 
 type Config struct {
