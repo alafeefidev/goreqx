@@ -1,13 +1,8 @@
 package main
 
-import (
-	"fmt"
-
-	"github.com/google/uuid"
-)
-
-var sus uuid.UUIDs
+import "github.com/alafeefidev/goreqx"
 
 func main() {
-	fmt.Println(uuid.New())
+	c := goreqx.DefaultConfig
+	c.Init()
 }
