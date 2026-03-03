@@ -1,8 +1,14 @@
 package main
 
-import "github.com/alafeefidev/goreqx"
+import (
+	"github.com/alafeefidev/goreqx"
+	"net/http"
+)
 
 func main() {
 	c := goreqx.DefaultConfig
-	c.Init()
+	
+	req, err := http.NewRequest(http.MethodGet, "https://httpbin.org/get", nil)
+	
+
 }
