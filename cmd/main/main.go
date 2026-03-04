@@ -1,14 +1,29 @@
 package main
 
 import (
+	"log/slog"
+	"os"
+	"time"
+
 	"github.com/alafeefidev/goreqx"
-	"net/http"
 )
 
+//TODO memory and file based caching
+
 func main() {
-	c := goreqx.DefaultConfig
-	
-	req, err := http.NewRequest(http.MethodGet, "https://httpbin.org/get", nil)
-	
+	url := "https://httpbin.org/status/490"
+	url2 := "https://httpbin.org/status/490"
+	logger := slog.New(slog.NewTextHandler(os.Stdout, nil))
+	cache := goreqx.New(
+		goreqx.WithLogger(logger),
+	)
+
+	cache.Get(url, 25*time.Second)
+	cache.Get(url2, 25*time.Second)
+	cache.Get(url, 25*time.Second)
+	cache.Get(url2, 25*time.Second)
+	cache.Get(url, 25*time.Second)
+	cache.Get(url2, 25*time.Second)
+	cache.Get(url, 25*time.Second)
 
 }

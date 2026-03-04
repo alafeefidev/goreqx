@@ -2,4 +2,4 @@ module github.com/alafeefidev/goreqx
 
 go 1.25.7
 
-require github.com/google/uuid v1.6.0 // indirect
+require golang.org/x/sync v0.19.0
