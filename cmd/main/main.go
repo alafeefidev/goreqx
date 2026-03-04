@@ -1,29 +1,63 @@
 package main
 
 import (
+	"context"
+	"fmt"
+	"log"
 	"log/slog"
-	"os"
+	"net/http"
+	"sync"
 	"time"
 
-	"github.com/alafeefidev/goreqx"
+	"github.com/alafeefidev/cachez"
 )
 
-//TODO memory and file based caching
+func req(cache *cachez.Cache, ctx context.Context, wg *sync.WaitGroup) {
+	defer wg.Done()
+
+	rq := cachez.Request{
+		URL: "https://httpbin.org/post",
+		Method: http.MethodPost,
+		Query: map[string]string{
+			"name": "yo",
+			"sus": "yeah",
+		},
+		JSON: map[string]any{
+			"value": 5,
+			"worth": nil,
+		},
+		Headers: map[string]string{
+			"X-CacheZ": "Noice",
+		},
+	}
+
+	resp, err := cache.Do(ctx, rq, 5*time.Minute)
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Println(string(resp.Body))
+}
 
 func main() {
-	url := "https://httpbin.org/status/490"
-	url2 := "https://httpbin.org/status/490"
-	logger := slog.New(slog.NewTextHandler(os.Stdout, nil))
-	cache := goreqx.New(
-		goreqx.WithLogger(logger),
-	)
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
 
-	cache.Get(url, 25*time.Second)
-	cache.Get(url2, 25*time.Second)
-	cache.Get(url, 25*time.Second)
-	cache.Get(url2, 25*time.Second)
-	cache.Get(url, 25*time.Second)
-	cache.Get(url2, 25*time.Second)
-	cache.Get(url, 25*time.Second)
+
+	cache := cachez.New(
+		cachez.WithLogger(slog.Default()),
+		cachez.WithRandomUserAgent(),
+	)
+	cache.StartEviction(ctx, 1*time.Minute)
+
+	var wg sync.WaitGroup
+
+	start := time.Now()
+	for range 5 {
+		wg.Add(1)
+		go req(cache, ctx, &wg)
+	}
+	wg.Wait()
+	fmt.Println("All done")
+	fmt.Println(time.Since(start))
 
 }

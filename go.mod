@@ -1,4 +1,4 @@
-module github.com/alafeefidev/goreqx
+module github.com/alafeefidev/cachez
 
 go 1.25.7
 

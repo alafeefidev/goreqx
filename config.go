@@ -1,4 +1,4 @@
-package goreqx
+package cachez
 
 // import (
 // 	"encoding/json"
